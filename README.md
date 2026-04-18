@@ -59,6 +59,26 @@ Keeps HTTP connections open indefinitely and broadcasts whatever you type in the
 - Running blocking `input()` on a thread pool with `run_in_executor` so the event loop stays free
 - Broadcasting one message to multiple simultaneous clients
 
+### `run_in_executor` — mixing blocking code with async
+
+`input()` is a blocking call: it freezes the entire thread until you press Enter. Since the asyncio event loop runs on one thread, calling it directly would pause every connected client while waiting for a keystroke.
+
+`run_in_executor` fixes this by offloading the blocking call to a background thread, then `await`-ing a future that resolves when that thread finishes:
+
+```python
+line = await loop.run_in_executor(None, input, "> ")
+#                                 ^     ^       ^
+#                                 |     |       argument passed to input()
+#                                 |     blocking function to run on the thread
+#                                 None = use the default ThreadPoolExecutor
+```
+
+The event loop stays free to serve chunks to browsers while the thread sits blocked on the keyboard. The pattern works for any blocking call — slow libraries, legacy file I/O, etc.:
+
+```python
+result = await loop.run_in_executor(None, some_blocking_function, arg1, arg2)
+```
+
 **Run it:**
 
 ```bash
