@@ -111,15 +111,6 @@ Each chunk is prefixed with its byte length in hexadecimal. A `0` chunk terminat
 - Python 3.10+
 - No third-party dependencies
 
-## Roadmap
-
-- [ ] Server-Sent Events (SSE) over HTTP
-- [ ] WebSocket streaming
-- [ ] Async file streaming with `aiofiles`
-- [ ] Generator-based streaming pipelines
-- [ ] Streaming with `httpx` as a client
-- [ ] LLM token streaming via the Anthropic API
-
 ## License
 
 MIT
